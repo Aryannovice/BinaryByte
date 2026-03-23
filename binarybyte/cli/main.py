@@ -1,0 +1,90 @@
+import typer
+from rich.console import Console
+
+from binarybyte import __version__
+
+app = typer.Typer(
+    name="binarybyte",
+    help="Infrastructure layer for AI coding agents — evaluate, sync, and deploy agent configs across tools.",
+    no_args_is_help=True,
+)
+console = Console()
+
+state_app = typer.Typer(help="Manage shared agent state (the canonical notebook).")
+eval_app = typer.Typer(help="Evaluate agent changes for safety and correctness.")
+deploy_app = typer.Typer(help="Deploy verified configs to target agents.")
+
+app.add_typer(state_app, name="state")
+app.add_typer(eval_app, name="eval")
+app.add_typer(deploy_app, name="deploy")
+
+
+def version_callback(value: bool) -> None:
+    if value:
+        console.print(f"binarybyte {__version__}")
+        raise typer.Exit()
+
+
+@app.callback()
+def main(
+    version: bool = typer.Option(
+        False, "--version", "-v", help="Show version and exit.", callback=version_callback,
+        is_eager=True,
+    ),
+) -> None:
+    """BinaryByte — the infrastructure layer for AI coding agents."""
+
+
+@app.command()
+def init(
+    project_dir: str = typer.Argument(".", help="Project root directory (defaults to current)."),
+) -> None:
+    """Initialize BinaryByte in a project directory."""
+    from binarybyte.cli.init_cmd import run_init
+
+    run_init(project_dir)
+
+
+@state_app.command("add")
+def state_add(
+    key: str = typer.Option(..., "--key", "-k", help="Memory entry key."),
+    value: str = typer.Option(..., "--value", "-V", help="Memory entry value."),
+    source: str = typer.Option("manual", "--source", "-s", help="Source agent or 'manual'."),
+) -> None:
+    """Add a memory entry to the shared state."""
+    from binarybyte.cli.state_cmd import run_state_add
+
+    run_state_add(key, value, source)
+
+
+@state_app.command("list")
+def state_list() -> None:
+    """List all memory entries in the shared state."""
+    from binarybyte.cli.state_cmd import run_state_list
+
+    run_state_list()
+
+
+@eval_app.command("run")
+def eval_run(
+    diff: str = typer.Option(..., "--diff", "-d", help="Path to a unified diff / patch file."),
+    version: str = typer.Option("latest", "--version", "-V", help="Version label for this eval."),
+) -> None:
+    """Run evaluation checks against a diff."""
+    from binarybyte.cli.eval_cmd import run_eval
+
+    run_eval(diff, version)
+
+
+@deploy_app.command("run")
+def deploy_run(
+    version: str = typer.Option("latest", "--version", "-V", help="Version to deploy."),
+) -> None:
+    """Deploy verified agent configs to all targets."""
+    from binarybyte.cli.deploy_cmd import run_deploy
+
+    run_deploy(version)
+
+
+if __name__ == "__main__":
+    app()

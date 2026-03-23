@@ -1,0 +1,28 @@
+{
+  "version": "v2",
+  "passed": false,
+  "checks": [
+    {
+      "name": "denied_commands",
+      "passed": false,
+      "details": [
+        "Denied command 'rm -rf /' found in added line 2: rm -rf /"
+      ]
+    },
+    {
+      "name": "denied_paths",
+      "passed": false,
+      "details": [
+        "Denied path modified: '.env' matches rule '.env'"
+      ]
+    },
+    {
+      "name": "hallucinated_imports",
+      "passed": true,
+      "details": [
+        "No new imports detected in diff."
+      ]
+    }
+  ],
+  "timestamp": "2026-03-23T16:39:22.375400Z"
+}

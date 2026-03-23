@@ -1,0 +1,20 @@
+version: '1'
+project_name: my-project
+
+conventions:
+  - Use pytest for all tests
+  - Use Pydantic for data models
+
+memory:
+  - key: api-pattern
+    value: REST endpoints in src/api/, using FastAPI
+    source: manual
+    timestamp: '2026-03-23T12:00:00+00:00'
+  - key: database
+    value: PostgreSQL with SQLAlchemy ORM, migrations via Alembic
+    source: gemini-cli
+    timestamp: '2026-03-23T12:30:00+00:00'
+  - key: auth
+    value: JWT tokens, refresh flow in src/auth/
+    source: cursor
+    timestamp: '2026-03-23T13:00:00+00:00'

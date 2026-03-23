@@ -1,0 +1,12 @@
+version: '1'
+project_name: test-playground
+conventions: []
+memory:
+- key: framework
+  value: FastAPI for REST endpoints
+  source: manual
+  timestamp: '2026-03-23T16:35:51.443650+00:00'
+- key: testing
+  value: Always use pytest
+  source: gemini-cli
+  timestamp: '2026-03-23T16:35:59.882978+00:00'

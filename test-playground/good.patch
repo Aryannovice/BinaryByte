@@ -1,0 +1,9 @@
+diff --git a/src/main.py b/src/main.py
+--- a/src/main.py
++++ b/src/main.py
+@@ -1,2 +1,4 @@
++import os
++import json
+ def main():
+-    pass
++    print("hello")

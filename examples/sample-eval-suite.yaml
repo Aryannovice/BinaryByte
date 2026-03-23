@@ -1,0 +1,25 @@
+# This file shows the structure of an eval suite configuration.
+# Currently, eval rules are defined inline in .binarybyte/config.yaml
+# under the 'eval' key. This file is for reference.
+
+eval:
+  safety:
+    denied_commands:
+      - rm -rf /
+      - rm -rf *
+      - DROP TABLE
+      - DROP DATABASE
+      - FORMAT
+      - ':(){:|:&};:'
+      - mkfs
+      - dd if=/dev/zero
+    denied_paths:
+      - .env
+      - .env.local
+      - .env.production
+      - secrets/
+      - .git/
+      - id_rsa
+      - id_ed25519
+      - credentials.json
+      - service-account.json
