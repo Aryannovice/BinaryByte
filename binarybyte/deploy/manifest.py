@@ -5,6 +5,9 @@ from pathlib import Path
 from binarybyte.deploy.targets.base import BaseAdapter
 from binarybyte.deploy.targets.cursor import CursorAdapter
 from binarybyte.deploy.targets.gemini_cli import GeminiCliAdapter
+from binarybyte.core.constants import get_bb_dir
+import importlib.util
+
 
 _REGISTRY: dict[str, type[BaseAdapter]] = {
     "cursor": CursorAdapter,
@@ -12,12 +15,44 @@ _REGISTRY: dict[str, type[BaseAdapter]] = {
 }
 
 
+def _load_plugins(project_root: Path | None = None) -> dict[str, type[BaseAdapter]]:
+    registry: dict[str, type[BaseAdapter]] = {}
+    plugins_dir = get_bb_dir(project_root) / "plugins"
+    if not plugins_dir.exists():
+        return registry
+
+    for p in plugins_dir.glob("*.py"):
+        try:
+            spec = importlib.util.spec_from_file_location(p.stem, p)
+            if spec and spec.loader:
+                mod = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(mod)
+                # find BaseAdapter subclasses
+                for attr in dir(mod):
+                    obj = getattr(mod, attr)
+                    try:
+                        if isinstance(obj, type) and issubclass(obj, BaseAdapter) and obj is not BaseAdapter:
+                            name = getattr(obj, "NAME", p.stem)
+                            registry[name] = obj
+                    except Exception:
+                        continue
+        except Exception:
+            continue
+
+    return registry
+
+
 def get_adapter(target: str, project_root: Path | None = None) -> BaseAdapter:
     cls = _REGISTRY.get(target)
+    # load project plugins and merge
+    plugins = _load_plugins(project_root)
+    if target in plugins:
+        cls = plugins[target]
     if cls is None:
+        available = list(_REGISTRY.keys()) + list(plugins.keys())
         raise ValueError(
             f"Unknown deploy target '{target}'. "
-            f"Available: {', '.join(_REGISTRY.keys())}"
+            f"Available: {', '.join(available)}"
         )
     return cls(project_root=project_root)
 

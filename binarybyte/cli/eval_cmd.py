@@ -1,4 +1,6 @@
 from pathlib import Path
+import subprocess
+from typing import Optional
 
 from rich.console import Console
 from rich.panel import Panel
@@ -9,15 +11,33 @@ from binarybyte.eval.runner import EvalRunner
 console = Console()
 
 
-def run_eval(diff: str, version: str) -> None:
-    diff_path = Path(diff)
-    if not diff_path.exists():
-        console.print(f"[red]Error:[/red] Diff file not found: {diff}")
+def _git_diff(range_spec: str) -> str:
+    try:
+        out = subprocess.check_output(["git", "diff", range_spec], stderr=subprocess.STDOUT)
+        return out.decode("utf-8")
+    except subprocess.CalledProcessError as e:
+        console.print(f"[red]Error:[/red] git diff failed: {e.output.decode('utf-8', errors='ignore')}")
         raise SystemExit(1)
 
-    diff_text = diff_path.read_text(encoding="utf-8")
+
+def run_eval(diff: Optional[str], git_range: Optional[str], version: str) -> None:
+    diff_text = ""
+    if git_range:
+        diff_text = _git_diff(git_range)
+    else:
+        if not diff:
+            console.print("[red]Error:[/red] Either --diff or --git-range must be provided.")
+            raise SystemExit(1)
+
+        diff_path = Path(diff)
+        if not diff_path.exists():
+            console.print(f"[red]Error:[/red] Diff file not found: {diff}")
+            raise SystemExit(1)
+
+        diff_text = diff_path.read_text(encoding="utf-8")
+
     if not diff_text.strip():
-        console.print("[yellow]Warning:[/yellow] Diff file is empty.")
+        console.print("[yellow]Warning:[/yellow] Diff is empty.")
         return
 
     try:

@@ -56,6 +56,29 @@ cd BinaryByte
 pip install -e ".[dev]"
 ```
 
+### Install from source (local)
+
+If you have the repository locally and want to install it for a single user without publishing to PyPI:
+
+```bash
+python -m pip install -e .
+```
+
+### Plugins
+
+You can add custom deploy adapters by placing a Python file in `.binarybyte/plugins/` inside your project. Copy the example at `examples/plugin_example.py` to `.binarybyte/plugins/example_adapter.py` and adapt the class to implement your adapter. The adapter must subclass `BaseAdapter` and expose a `NAME` attribute used as the target id.
+
+### Interactive mode
+
+For non-technical users, run:
+
+```bash
+binarybyte interactive
+```
+
+This starts a simple guided CLI to add state entries, evaluate patches or git ranges, and deploy the latest verified config.
+
+
 ### First Run
 
 ```bash

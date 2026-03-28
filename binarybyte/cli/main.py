@@ -1,4 +1,5 @@
 import typer
+from typing import Optional
 from rich.console import Console
 
 from binarybyte import __version__
@@ -67,13 +68,22 @@ def state_list() -> None:
 
 @eval_app.command("run")
 def eval_run(
-    diff: str = typer.Option(..., "--diff", "-d", help="Path to a unified diff / patch file."),
+    diff: Optional[str] = typer.Option(None, "--diff", "-d", help="Path to a unified diff / patch file."),
+    git_range: Optional[str] = typer.Option(None, "--git-range", help="Git range to diff (e.g. HEAD~1..HEAD)."),
     version: str = typer.Option("latest", "--version", "-V", help="Version label for this eval."),
 ) -> None:
     """Run evaluation checks against a diff."""
     from binarybyte.cli.eval_cmd import run_eval
 
-    run_eval(diff, version)
+    run_eval(diff=diff, git_range=git_range, version=version)
+
+
+@app.command()
+def interactive() -> None:
+    """Start interactive guided mode for non-technical users."""
+    from binarybyte.cli.interactive_cmd import run_interactive
+
+    run_interactive()
 
 
 @deploy_app.command("run")
