@@ -4,6 +4,9 @@ agents:
   targets:
     - cursor
     - gemini-cli
+    - claude-code
+    - windsurf
+    - copilot
 
 eval:
   safety:
@@ -16,6 +19,15 @@ eval:
       - .env
       - secrets/
       - .git/
+    scan_secrets: true
+    secret_patterns: []  # empty = use built-in defaults
+
+  sandbox:
+    enabled: false  # set true to enable Docker sandbox evaluation
+    image: python:3.11-slim
+    timeout_seconds: 120
+    commands:
+      - pytest -q
 
 state:
   conventions:

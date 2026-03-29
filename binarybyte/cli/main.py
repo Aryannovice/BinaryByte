@@ -66,6 +66,35 @@ def state_list() -> None:
     run_state_list()
 
 
+@state_app.command("rollback")
+def state_rollback(
+    version: str = typer.Option(..., "--version", "-V", help="Version to roll back to."),
+) -> None:
+    """Roll back state to a previous eval snapshot."""
+    from binarybyte.cli.state_cmd import run_state_rollback
+
+    run_state_rollback(version)
+
+
+@state_app.command("snapshots")
+def state_snapshots() -> None:
+    """List all available state snapshots."""
+    from binarybyte.cli.state_cmd import run_state_snapshots
+
+    run_state_snapshots()
+
+
+@state_app.command("diff")
+def state_diff(
+    from_version: str = typer.Option(..., "--from", help="Source version to compare from."),
+    to_version: str = typer.Option(..., "--to", help="Target version to compare to."),
+) -> None:
+    """Compare state between two eval snapshots."""
+    from binarybyte.cli.state_cmd import run_state_diff
+
+    run_state_diff(from_version, to_version)
+
+
 @eval_app.command("run")
 def eval_run(
     diff: Optional[str] = typer.Option(None, "--diff", "-d", help="Path to a unified diff / patch file."),
@@ -94,6 +123,24 @@ def deploy_run(
     from binarybyte.cli.deploy_cmd import run_deploy
 
     run_deploy(version)
+
+
+@deploy_app.command("rollback")
+def deploy_rollback(
+    version: str = typer.Option(..., "--version", "-V", help="Version to roll back to."),
+) -> None:
+    """Roll back deployment to a previous state snapshot."""
+    from binarybyte.cli.deploy_cmd import run_deploy_rollback
+
+    run_deploy_rollback(version)
+
+
+@deploy_app.command("history")
+def deploy_history() -> None:
+    """Show deployment history log."""
+    from binarybyte.cli.deploy_cmd import run_deploy_history
+
+    run_deploy_history()
 
 
 if __name__ == "__main__":

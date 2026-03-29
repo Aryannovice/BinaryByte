@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-from typing import Optional
 from rich.console import Console
 from rich.panel import Panel
 
-from binarybyte.cli.state_cmd import run_state_add, run_state_list
+from binarybyte.cli.state_cmd import run_state_add, run_state_list, run_state_snapshots
 from binarybyte.cli.eval_cmd import run_eval
-from binarybyte.cli.deploy_cmd import run_deploy
+from binarybyte.cli.deploy_cmd import run_deploy, run_deploy_history
 
 console = Console()
 
@@ -23,9 +22,17 @@ def run_interactive() -> None:
 
     while True:
         console.print(
-            "\nOptions:\n  1) Add state entry\n  2) List state\n  3) Evaluate patch file\n  4) Evaluate git range\n  5) Deploy latest\n  6) Exit"
+            "\nOptions:\n"
+            "  1) Add state entry\n"
+            "  2) List state\n"
+            "  3) Evaluate patch file\n"
+            "  4) Evaluate git range\n"
+            "  5) Deploy latest\n"
+            "  6) View state snapshots\n"
+            "  7) View deploy history\n"
+            "  8) Exit"
         )
-        choice = _prompt("Choose an option (1-6): ").strip()
+        choice = _prompt("Choose an option (1-8): ").strip()
         if choice == "1":
             key = _prompt("Key: ").strip()
             value = _prompt("Value: ").strip()
@@ -46,6 +53,10 @@ def run_interactive() -> None:
                 run_eval(diff=None, git_range=rng, version="latest")
         elif choice == "5":
             run_deploy(version="latest")
+        elif choice == "6":
+            run_state_snapshots()
+        elif choice == "7":
+            run_deploy_history()
         else:
             console.print("Exiting interactive mode.")
             break

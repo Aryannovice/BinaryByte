@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "binarybyte"
-version = "0.1.1"
+version = "0.3.0"
 description = "Infrastructure layer for AI coding agents — evaluate, sync, and deploy agent configs across tools."
 readme = "README.md"
 license = "MIT"
@@ -32,10 +32,16 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+sandbox = [
+    "docker>=7.0.0",
+]
 dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
     "ruff>=0.4.0",
+]
+all = [
+    "docker>=7.0.0",
 ]
 
 [project.scripts]

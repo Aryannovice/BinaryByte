@@ -19,10 +19,20 @@ class SafetyEvalConfig(BaseModel):
     denied_paths: list[str] = Field(
         default_factory=lambda: [".env", "secrets/", ".git/"]
     )
+    scan_secrets: bool = True
+    secret_patterns: list[str] = Field(default_factory=list)
+
+
+class SandboxConfig(BaseModel):
+    enabled: bool = False
+    image: str = "python:3.11-slim"
+    timeout_seconds: int = 120
+    commands: list[str] = Field(default_factory=lambda: ["pytest -q"])
 
 
 class EvalConfig(BaseModel):
     safety: SafetyEvalConfig = Field(default_factory=SafetyEvalConfig)
+    sandbox: SandboxConfig = Field(default_factory=SandboxConfig)
 
 
 class StateConfig(BaseModel):

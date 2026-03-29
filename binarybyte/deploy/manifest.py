@@ -3,8 +3,11 @@ from __future__ import annotations
 from pathlib import Path
 
 from binarybyte.deploy.targets.base import BaseAdapter
+from binarybyte.deploy.targets.claude_code import ClaudeCodeAdapter
+from binarybyte.deploy.targets.copilot import CopilotAdapter
 from binarybyte.deploy.targets.cursor import CursorAdapter
 from binarybyte.deploy.targets.gemini_cli import GeminiCliAdapter
+from binarybyte.deploy.targets.windsurf import WindsurfAdapter
 from binarybyte.core.constants import get_bb_dir
 import importlib.util
 
@@ -12,6 +15,9 @@ import importlib.util
 _REGISTRY: dict[str, type[BaseAdapter]] = {
     "cursor": CursorAdapter,
     "gemini-cli": GeminiCliAdapter,
+    "claude-code": ClaudeCodeAdapter,
+    "windsurf": WindsurfAdapter,
+    "copilot": CopilotAdapter,
 }
 
 
