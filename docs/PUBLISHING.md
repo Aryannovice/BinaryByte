@@ -6,7 +6,7 @@ This project uses `hatchling` (configured in `pyproject.toml`). These steps show
 Prerequisites
 - Python 3.11+
 - `pip install build twine`
-- A PyPI account and an API token
+- A PyPI account
 
 Build
 -----
@@ -22,7 +22,21 @@ This produces artifacts in the `dist/` directory.
 Publish
 -------
 
-Use `twine` to upload the built distributions. Prefer using an API token stored in `~/.pypirc` or via `TWINE_USERNAME`/`TWINE_PASSWORD` environment variables.
+Preferred: GitHub Actions + PyPI Trusted Publishing (OIDC)
+---------------------------------------------------------
+
+For open-source projects, prefer PyPI Trusted Publishing so you do not store a long-lived PyPI API token in GitHub.
+
+High-level steps:
+
+1. Configure your GitHub Actions workflow to use `pypa/gh-action-pypi-publish` with `id-token: write` permissions.
+2. In PyPI, add the repository/workflow as a **Trusted Publisher** for the `binarybyte` project.
+3. Push a version tag (e.g. `v0.3.0`) to trigger the release workflow.
+
+Manual fallback: Twine upload
+-----------------------------
+
+If you prefer manual publishing, use `twine` to upload the built distributions.
 
 ```bash
 python -m twine upload dist/*

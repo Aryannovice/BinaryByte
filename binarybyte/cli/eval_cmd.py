@@ -70,3 +70,6 @@ def run_eval(diff: Optional[str], git_range: Optional[str], version: str) -> Non
             border_style="green" if verdict.passed else "red",
         )
     )
+
+    if not verdict.passed:
+        raise SystemExit(1)
