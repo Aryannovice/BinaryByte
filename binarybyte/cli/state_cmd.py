@@ -79,13 +79,13 @@ def run_state_rollback(version: str) -> None:
     write_state(snapshot)
     console.print(
         Panel(
-            f"[green]State rolled back to version[/green] [cyan]{version}[/cyan]\n"
-            + (
-                f"[dim]Requested:[/dim] {requested}\n" if requested != version else ""
-            )
-            f"  Project:  {snapshot.project_name}\n"
-            f"  Memory:   {len(snapshot.memory)} entries\n"
-            f"  Conventions: {len(snapshot.conventions)} items",
+            (
+                f"[green]State rolled back to version[/green] [cyan]{version}[/cyan]\n"
+                + (f"[dim]Requested:[/dim] {requested}\n" if requested != version else "")
+                + f"  Project:  {snapshot.project_name}\n"
+                + f"  Memory:   {len(snapshot.memory)} entries\n"
+                + f"  Conventions: {len(snapshot.conventions)} items"
+            ),
             border_style="green",
             title="State Rollback",
         )
