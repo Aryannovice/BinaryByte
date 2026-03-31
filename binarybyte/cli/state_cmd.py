@@ -2,6 +2,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
+from binarybyte.eval.results import find_latest_passed_version
 from binarybyte.state.snapshots import list_snapshots, load_snapshot
 from binarybyte.state.store import add_memory, read_state, write_state
 
@@ -58,6 +59,17 @@ def run_state_list() -> None:
 
 
 def run_state_rollback(version: str) -> None:
+    requested = version
+    if version in {"last-passed", "last_passed", "lastpassed"}:
+        resolved = find_latest_passed_version()
+        if resolved is None:
+            console.print(
+                "[red]Error:[/red] No passing eval verdicts found. "
+                "Run 'binarybyte eval run' until one passes first."
+            )
+            raise SystemExit(1)
+        version = resolved
+
     try:
         snapshot = load_snapshot(version)
     except FileNotFoundError as e:
@@ -68,6 +80,9 @@ def run_state_rollback(version: str) -> None:
     console.print(
         Panel(
             f"[green]State rolled back to version[/green] [cyan]{version}[/cyan]\n"
+            + (
+                f"[dim]Requested:[/dim] {requested}\n" if requested != version else ""
+            )
             f"  Project:  {snapshot.project_name}\n"
             f"  Memory:   {len(snapshot.memory)} entries\n"
             f"  Conventions: {len(snapshot.conventions)} items",

@@ -82,7 +82,7 @@ State:
 - List entries: `binarybyte state list`
 - List snapshots: `binarybyte state snapshots`
 - Compare snapshots: `binarybyte state diff --from v1 --to v2`
-- Restore state from snapshot: `binarybyte state rollback --version v1`
+- Restore state from snapshot: `binarybyte state rollback --version v1` (or `--version last-passed`)
 
 Eval:
 
@@ -92,7 +92,7 @@ Eval:
 Deploy:
 
 - Deploy current state (defaults to latest verdict): `binarybyte deploy run [--version latest|v1]`
-- Deploy from a previous snapshot: `binarybyte deploy rollback --version v1`
+- Deploy from a previous snapshot: `binarybyte deploy rollback --version v1` (or `--version last-passed`)
 - Show deploy history: `binarybyte deploy history`
 - List available targets (built-ins + plugins): `binarybyte deploy targets`
 

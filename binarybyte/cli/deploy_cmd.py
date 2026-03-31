@@ -6,6 +6,7 @@ from binarybyte.core.config import load_config
 from binarybyte.deploy.gate import check_gate, find_latest_version
 from binarybyte.deploy.history import append_deploy_log, read_deploy_log
 from binarybyte.deploy.manifest import get_adapter, list_built_in_targets, list_plugin_targets
+from binarybyte.eval.results import find_latest_passed_version
 from binarybyte.state.schema import AgentState
 from binarybyte.state.snapshots import load_snapshot
 from binarybyte.state.store import read_state
@@ -99,6 +100,16 @@ def run_deploy(version: str) -> None:
 
 
 def run_deploy_rollback(version: str) -> None:
+    if version in {"last-passed", "last_passed", "lastpassed"}:
+        resolved = find_latest_passed_version()
+        if resolved is None:
+            console.print(
+                "[red]Error:[/red] No passing eval verdicts found. "
+                "Run 'binarybyte eval run' until one passes first."
+            )
+            raise SystemExit(1)
+        version = resolved
+
     try:
         snapshot = load_snapshot(version)
     except FileNotFoundError as e:
