@@ -5,7 +5,7 @@ from rich.table import Table
 from binarybyte.core.config import load_config
 from binarybyte.deploy.gate import check_gate, find_latest_version
 from binarybyte.deploy.history import append_deploy_log, read_deploy_log
-from binarybyte.deploy.manifest import get_adapter
+from binarybyte.deploy.manifest import get_adapter, list_built_in_targets, list_plugin_targets
 from binarybyte.state.schema import AgentState
 from binarybyte.state.snapshots import load_snapshot
 from binarybyte.state.store import read_state
@@ -138,3 +138,30 @@ def run_deploy_history() -> None:
         )
 
     console.print(table)
+
+
+def run_deploy_targets() -> None:
+    built_ins = list_built_in_targets()
+    plugins = list_plugin_targets()
+
+    table = Table(title="Deploy Targets")
+    table.add_column("Target", style="cyan")
+    table.add_column("Source", style="dim")
+
+    for target in built_ins:
+        table.add_row(target, "built-in")
+
+    if plugins:
+        for target in plugins:
+            table.add_row(target, "plugin (.binarybyte/plugins)")
+    else:
+        table.add_row("(none)", "no plugins found in .binarybyte/plugins")
+
+    console.print(table)
+    console.print(
+        Panel(
+            "Enable targets by adding their names under `agents.targets` in `.binarybyte/config.yaml`.",
+            border_style="dim",
+            title="How to enable",
+        )
+    )

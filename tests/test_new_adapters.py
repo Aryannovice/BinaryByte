@@ -2,7 +2,7 @@ import tempfile
 from pathlib import Path
 
 from binarybyte.core.config import default_config, save_config
-from binarybyte.deploy.manifest import get_adapter, list_available_targets
+from binarybyte.deploy.manifest import get_adapter, list_all_targets, list_available_targets, list_plugin_targets
 from binarybyte.deploy.targets.claude_code import ClaudeCodeAdapter
 from binarybyte.deploy.targets.copilot import CopilotAdapter
 from binarybyte.deploy.targets.windsurf import WindsurfAdapter
@@ -31,6 +31,42 @@ def test_registry_includes_new_targets():
     assert "copilot" in targets
     assert "cursor" in targets
     assert "gemini-cli" in targets
+
+
+def test_plugin_targets_are_discovered():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        root = _setup_project(tmpdir)
+        plugins_dir = root / ".binarybyte" / "plugins"
+        plugins_dir.mkdir(parents=True, exist_ok=True)
+
+        plugin_code = """
+from pathlib import Path
+
+from binarybyte.deploy.targets.base import BaseAdapter
+from binarybyte.core.config import BinaryByteConfig
+from binarybyte.state.schema import AgentState
+
+
+class PicoClawAdapter(BaseAdapter):
+    NAME = "picoclaw"
+
+    @property
+    def name(self) -> str:
+        return self.NAME
+
+    def deploy(self, state: AgentState, config: BinaryByteConfig) -> Path:
+        out = self.project_root / "PICOCLAW.md"
+        out.write_text("ok", encoding="utf-8")
+        return out
+""".lstrip()
+
+        (plugins_dir / "picoclaw_adapter.py").write_text(plugin_code, encoding="utf-8")
+
+        plugin_targets = list_plugin_targets(root)
+        assert "picoclaw" in plugin_targets
+
+        all_targets = list_all_targets(root)
+        assert "picoclaw" in all_targets
 
 
 def test_get_adapter_claude_code():

@@ -64,4 +64,29 @@ def get_adapter(target: str, project_root: Path | None = None) -> BaseAdapter:
 
 
 def list_available_targets() -> list[str]:
-    return list(_REGISTRY.keys())
+    """List built-in deploy targets.
+
+    Note: this intentionally returns only built-ins for backward compatibility.
+    Use `list_all_targets()` or `list_plugin_targets()` to include project plugins.
+    """
+
+    return sorted(_REGISTRY.keys())
+
+
+def list_built_in_targets() -> list[str]:
+    """Alias for `list_available_targets()` with clearer semantics."""
+
+    return list_available_targets()
+
+
+def list_plugin_targets(project_root: Path | None = None) -> list[str]:
+    """List deploy targets discovered from `.binarybyte/plugins/*.py` in a project."""
+
+    return sorted(_load_plugins(project_root).keys())
+
+
+def list_all_targets(project_root: Path | None = None) -> list[str]:
+    """List all deploy targets: built-ins + project plugin adapters."""
+
+    plugins = _load_plugins(project_root)
+    return sorted(set(_REGISTRY.keys()) | set(plugins.keys()))

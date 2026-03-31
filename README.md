@@ -94,6 +94,7 @@ Deploy:
 - Deploy current state (defaults to latest verdict): `binarybyte deploy run [--version latest|v1]`
 - Deploy from a previous snapshot: `binarybyte deploy rollback --version v1`
 - Show deploy history: `binarybyte deploy history`
+- List available targets (built-ins + plugins): `binarybyte deploy targets`
 
 ---
 
@@ -163,6 +164,30 @@ Deploy adapters:
 Eval checks:
 
 - Add Python files under `.binarybyte/checks/` exposing `check(diff_text, config) -> CheckResult`.
+
+---
+
+## Extending to new tools
+
+Agent tools change frequently. BinaryByte is designed so new targets can be added **without** changing the core package.
+
+The recommended approach is:
+
+1. Add a deploy adapter as a **project-local plugin** under `.binarybyte/plugins/`.
+2. Add its `NAME` to `agents.targets` in `.binarybyte/config.yaml`.
+
+See `examples/plugin_example.py` for a working adapter template.
+
+### Requesting a new built-in target
+
+If you want BinaryByte to support a new tool out of the box, open an issue with:
+
+- Tool name + website/docs link
+- Exact output file path(s) it expects
+- Required format (Markdown/YAML/JSON) and a minimal example
+- Any constraints (max size, headings, frontmatter, etc.)
+
+We usually start by shipping it as a plugin adapter first, then promote it to a built-in target once it’s stable.
 
 ---
 

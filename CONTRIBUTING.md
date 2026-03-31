@@ -46,6 +46,17 @@ Great contributions include:
 - Docs improvements and usage examples
 - Bug fixes and test coverage improvements
 
+## Requesting a new target (adapter)
+
+Agent tools evolve fast. If you want support for a new tool, please open an issue and include:
+
+- Tool name + docs link
+- The exact file path(s) the tool reads from
+- Expected format (Markdown/YAML/JSON) and a minimal example output
+- Any constraints (frontmatter required, max length, headings, etc.)
+
+If you can, a great first PR is a **plugin adapter** (see `examples/plugin_example.py`). We can promote stable adapters to built-in targets later.
+
 ## Project conventions
 
 - Keep changes small and focused (one theme per PR).

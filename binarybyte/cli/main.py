@@ -143,5 +143,13 @@ def deploy_history() -> None:
     run_deploy_history()
 
 
+@deploy_app.command("targets")
+def deploy_targets() -> None:
+    """List available deploy targets (built-ins + project plugins)."""
+    from binarybyte.cli.deploy_cmd import run_deploy_targets
+
+    run_deploy_targets()
+
+
 if __name__ == "__main__":
     app()
