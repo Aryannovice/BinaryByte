@@ -8,6 +8,8 @@
 **BinaryByte is CI/CD for AI coding agents**: evaluate agent-proposed diffs, version shared agent state, and deploy verified rules to multiple targets (Cursor, Gemini CLI, Claude Code, Windsurf, Copilot, plus plugins).
 
 **Current version:** 0.3.0
+[Demo Link](https://1drv.ms/v/c/87e1d8de83df6292/IQCxm8EVHeTGRYoFBHzK68agAQY5TxUUqOCo9wc1lTohAOE?e=G3hBfA)
+
 
 ---
 
